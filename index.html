@@ -6,33 +6,94 @@
     <title>Poppart</title>
     <meta
       name="description"
-      content="Poppart is a minimalist launch space for calm, focused digital moments."
+      content="Alex's personal home page."
     />
     <meta property="og:title" content="Poppart" />
     <meta
       property="og:description"
-      content="A website under construction."
+      content="Alex's personal home page."
     />
     <meta property="og:url" content="https://www.poppart.cloud" />
     <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..600&family=Space+Grotesk:wght@400..600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
+    <script src="main.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <div class="background">
       <div class="glow glow-one"></div>
       <div class="glow glow-two"></div>
       <div class="grain"></div>
     </div>
 
-    <main class="center">
-      <p class="badge">Under Construction</p>
-      <h1>Poppart</h1>
-      <p class="lede">
-        Just another netizen.
-      </p>
-      <a class="link" href="https://www.poppart.cloud">poppart.cloud</a>
+    <div data-include="header"></div>
+
+    <main id="main" class="page">
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Welcome</p>
+          <h1>Hi, I'm Alex.</h1>
+          <p class="lede">
+            I build things for work and explore ideas for fun — this site lives somewhere in between.
+          </p>
+          <form class="hero-chooser" aria-label="Start here">
+            <label class="chooser-label" id="start-here-label">Start Here</label>
+            <div class="chooser-control" data-chooser>
+              <button
+                class="chooser-trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="start-here-label start-here-value"
+                data-chooser-trigger
+              >
+                <span id="start-here-value" data-chooser-value>Select a Path</span>
+              </button>
+              <div class="chooser-menu" role="listbox" aria-label="Start here options" data-chooser-menu>
+                <button type="button" role="option" data-value="work.html" data-chooser-option>
+                  Work Overview
+                </button>
+                <button type="button" role="option" data-value="life.html" data-chooser-option>
+                  Life and Hobbies
+                </button>
+                <button type="button" role="option" data-value="apps.html" data-chooser-option>
+                  My Apps and Experiments
+                </button>
+                <button type="button" role="option" data-value="contact.html" data-chooser-option>
+                  Reach Out
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <aside class="hero-panel" aria-label="About Me">
+          <div class="hero-panel-header">
+            <h2>About Me</h2>
+          </div>
+          <ul class="hero-list">
+            <li>
+              <strong>Build</strong>
+              <span>Creating a new story - one project at a time.</span>
+            </li>
+            <li>
+              <strong>Play</strong>
+              <span>Exploring my creations through music, gaming, and code.</span>
+            </li>
+            <li>
+              <strong>Balance</strong>
+              <span>Making new connections within the interplay of work and leisure.</span>
+            </li>
+          </ul>
+        </aside>
+      </section>
     </main>
 
-    <footer class="footer">Coming soon.</footer>
+    <div data-include="footer"></div>
   </body>
 </html>

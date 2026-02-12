@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Name - Life</title>
+    <meta
+      name="description"
+      content="Personal reflections, music, and gaming notes for Your Name."
+    />
+    <meta property="og:title" content="Your Name - Life" />
+    <meta
+      property="og:description"
+      content="Personal reflections and lighter notes from life outside of work."
+    />
+    <meta property="og:url" content="https://www.poppart.cloud/life.html" />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..600&family=Space+Grotesk:wght@400..600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="background">
+      <div class="glow glow-one"></div>
+      <div class="glow glow-two"></div>
+      <div class="grain"></div>
+    </div>
+
+    <div data-include="header"></div>
+
+    <main id="main" class="page">
+      <section class="page-intro">
+        <p class="eyebrow">Life</p>
+        <h1>Play Louder. Play Harder.</h1>
+        <p class="lede">
+          Music, gaming, and streaming whatever feels fun in the moment.
+        </p>
+      </section>
+
+      <section class="section">
+        <div class="tabs" data-tabs>
+          <div class="tab-list" role="tablist" aria-label="Life sections">
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="tab-music"
+              data-tab="music"
+            >
+              Music
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-gaming"
+              data-tab="gaming"
+            >
+              Gaming
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-streaming"
+              data-tab="streaming"
+            >
+              Streaming
+            </button>
+          </div>
+
+          <div class="tab-panel" role="tabpanel" id="tab-music" data-tab-panel="music">
+            <h2 class="section-title">Music mixes</h2>
+            <p class="section-lede">
+              Browse my creations, from wholly original works, AI augmented compositions, and other remixes.
+            </p>
+            <div class="music-browser" data-music-browser>
+              <div class="music-controls">
+                <label class="field">
+                  <span>Search</span>
+                  <input type="search" placeholder="Filter by title" data-music-search />
+                </label>
+                <label class="field">
+                  <span>Type</span>
+                  <select data-music-type>
+                    <option value="">All types</option>
+                  </select>
+                </label>
+                <div class="field field-action">
+                  <span>Reset</span>
+                  <button class="button ghost" type="button" data-clear-filters>Clear filters</button>
+                </div>
+              </div>
+              <p class="music-status" data-music-status>Loading mixes...</p>
+              <div class="music-layout">
+                <div class="music-table-wrap">
+                  <table class="music-table" data-music-table>
+                    <thead>
+                      <tr>
+                        <th scope="col" data-sort-header="Title" aria-sort="none">
+                          <button class="table-sort" type="button" data-sort="Title">
+                            Title
+                            <span class="sort-indicator" aria-hidden="true"></span>
+                          </button>
+                        </th>
+                        <th scope="col" data-sort-header="Type" aria-sort="none">
+                          <button class="table-sort" type="button" data-sort="Type">
+                            Type
+                            <span class="sort-indicator" aria-hidden="true"></span>
+                          </button>
+                        </th>
+                        <th scope="col" data-sort-header="PublishDate" aria-sort="descending">
+                          <button class="table-sort" type="button" data-sort="PublishDate">
+                            Published
+                            <span class="sort-indicator" aria-hidden="true"></span>
+                          </button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody data-music-body></tbody>
+                  </table>
+                </div>
+                <aside class="music-sidebar-shell music-sidebar">
+                  <div class="music-panel music-pagination">
+                    <div class="pagination-header">Browse mixes</div>
+                    <label class="field field-inline">
+                      <span>Per page</span>
+                      <select data-music-page-size>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                      </select>
+                    </label>
+                    <div class="pagination-controls">
+                      <button class="button ghost" type="button" data-page-prev>Prev</button>
+                      <span data-page-status>Page 1 of 1</span>
+                      <button class="button ghost" type="button" data-page-next>Next</button>
+                    </div>
+                  </div>
+                  <div class="music-detail" data-music-detail hidden>
+                    <div class="music-detail-header">
+                      <h3 data-music-title></h3>
+                      <p class="music-meta" data-music-meta></p>
+                    </div>
+                    <p data-music-description></p>
+                    <div class="music-audio">
+                      <audio controls preload="none" data-music-audio></audio>
+                    </div>
+                    <div class="music-fields" data-music-fields></div>
+                    <div class="music-sources" data-music-sources></div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" role="tabpanel" id="tab-gaming" data-tab-panel="gaming" hidden>
+            <h2 class="section-title">Gaming</h2>
+            <p class="section-lede">Under construction. Playing soon.</p>
+          </div>
+
+          <div class="tab-panel" role="tabpanel" id="tab-streaming" data-tab-panel="streaming" hidden>
+            <h2 class="section-title">Streaming</h2>
+            <p class="section-lede">Under construction. Streaming soon.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <div data-include="footer"></div>
+  </body>
+</html>

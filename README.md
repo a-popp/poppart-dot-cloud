@@ -1,10 +1,18 @@
 # PopPart Cloud
 
-A static splash page for https://www.poppart.cloud.
+A static personal home page for https://www.poppart.cloud.
 
 ## Local preview
 
-Open `index.html` directly in a browser or serve the folder with any static server.
+Open any of the HTML files directly in a browser or serve the folder with any static server.
+
+## Structure
+
+- `index.html` is the home page.
+- `work.html`, `life.html`, `apps.html`, and `contact.html` are the main sections.
+- `header.html` and `footer.html` are shared snippets injected on the client.
+- `styles.css` contains light/dark theme tokens.
+- `main.js` adds a client-side theme toggle and stores preference locally.
 
 ## Deploy
 
