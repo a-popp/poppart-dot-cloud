@@ -132,6 +132,7 @@ ul {
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 200px 200px;
   opacity: 0.2;
+  -webkit-mask-image: radial-gradient(circle at 60% 40%, rgba(0, 0, 0, 0.6), transparent 70%);
   mask-image: radial-gradient(circle at 60% 40%, rgba(0, 0, 0, 0.6), transparent 70%);
 }
 
