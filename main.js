@@ -87,12 +87,11 @@
 		}
 
 		const address = `${user}@${domain}`;
-		const params = new URLSearchParams({
-			subject,
-			body: "Hi Alex,\r\n\r\n",
-		});
+		const query = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+			"Hi Alex,\r\n\r\n"
+		)}`;
 
-		link.href = `mailto:${address}?${params.toString()}`;
+		link.href = `mailto:${address}?${query}`;
 		if (emailTarget) {
 			emailTarget.textContent = address;
 		}
