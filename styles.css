@@ -422,6 +422,16 @@ ul {
   color: var(--ink-soft);
 }
 
+.card-link {
+  margin-top: 10px;
+}
+
+.card-link a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .page-intro {
   padding: 32px 0 10px;
 }

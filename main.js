@@ -71,10 +71,38 @@
 		}
 	};
 
+	const initContactLink = () => {
+		const link = document.querySelector("[data-contact-link]");
+		if (!link) {
+			return;
+		}
+
+		const user = link.getAttribute("data-user");
+		const domain = link.getAttribute("data-domain");
+		const subject = link.getAttribute("data-subject") || "Submission From Poppart Website";
+		const emailTarget = document.querySelector("[data-contact-email]");
+
+		if (!user || !domain) {
+			return;
+		}
+
+		const address = `${user}@${domain}`;
+		const params = new URLSearchParams({
+			subject,
+			body: "Hi Alex,\r\n\r\n",
+		});
+
+		link.href = `mailto:${address}?${params.toString()}`;
+		if (emailTarget) {
+			emailTarget.textContent = address;
+		}
+	};
+
 	const init = async () => {
 		await loadIncludes();
 		setActiveNav();
 		initThemeToggle();
+		initContactLink();
 		const chooser = document.querySelector("[data-chooser]");
 		if (chooser) {
 			const trigger = chooser.querySelector("[data-chooser-trigger]");

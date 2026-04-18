@@ -11,3 +11,6 @@
 
 # Resource files
 swagger.json
+
+# VS Code folder
+.vscode/   
