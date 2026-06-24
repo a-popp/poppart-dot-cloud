@@ -379,6 +379,13 @@
 					});
 			};
 
+			const escapeHtml = (str) =>
+				String(str)
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;");
+
 			const renderSources = (sources) => {
 				if (!detailSources) {
 					return;
@@ -396,7 +403,7 @@
 						.filter(Boolean)
 						.join(" / ");
 					if (source.URL) {
-						line.innerHTML = `${parts} / <a href="${source.URL}" target="_blank" rel="noreferrer">Link</a>`;
+						line.innerHTML = `${escapeHtml(parts)} / <a href="${escapeHtml(source.URL)}" target="_blank" rel="noreferrer">Link</a>`;
 					} else {
 						line.textContent = parts;
 					}
