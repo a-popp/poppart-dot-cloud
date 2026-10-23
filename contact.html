@@ -22,6 +22,22 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Set the theme before first paint to avoid flashing the wrong theme.
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {}
+        if (theme !== "dark" && theme !== "light") {
+          theme =
+            window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
     <script src="main.js" defer></script>
   </head>
   <body>
@@ -48,7 +64,6 @@
         <div class="section-grid">
           <article class="card">
             <h3>Get in Touch</h3>
-            <br/>
             <p>
               <a
                 class="button"
@@ -60,7 +75,6 @@
                 >Send Email</a
               >
             </p>
-            <br/>
             <p class="card-link">
               Email: <span data-contact-email>Enable JavaScript to view</span>
             </p>

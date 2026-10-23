@@ -1,16 +1,10 @@
+# Editor settings (allow shared workspace config)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
-!*.code-workspace
 
-# Built Visual Studio Code Extensions
-*.vsix
-
-# Resource files
+# Local resource files
 swagger.json
-
-# VS Code folder
-.vscode/   
