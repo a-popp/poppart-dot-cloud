@@ -5,28 +5,34 @@ build step and no dependencies.
 
 ## Local preview
 
-Each page fetches `header.html` and `footer.html` at runtime, so the site must be
-served over HTTP (opening the files directly via `file://` will not load the
-shared header/footer). Any static file server works, for example:
+Any static file server works, for example:
 
 ```
 python -m http.server 8000
 ```
 
-then open http://localhost:8000.
+then open http://localhost:8000. The pages also work opened directly, but the
+music browser on `life.html` needs an HTTP origin for its API calls.
 
 ## Structure
 
-- `index.html` — home page with the "Start here" navigation chooser.
+- `index.html` — home page with the "Start here" navigation menu.
 - `work.html`, `life.html`, `apps.html`, `contact.html` — section pages.
-- `header.html`, `footer.html` — shared markup injected into each page by `main.js`.
+- `404.html` — not-found page served for unknown paths.
 - `styles.css` — all styling, including light/dark theme tokens.
-- `main.js` — all client-side behavior: include loader, theme toggle, nav
-  highlighting, tabs, the hero chooser, the contact mailto link, and the music
-  browser on `life.html`.
+- `theme.js` — synchronous pre-paint script that applies the saved theme so
+  there is no flash of the wrong theme.
+- `main.js` — all client-side behavior: theme toggle, nav highlighting, tabs,
+  the hero chooser, the contact mailto link, and the music browser on
+  `life.html`.
+- `favicon.svg`, `og-image.png`, `robots.txt`, `sitemap.xml` — site assets and
+  crawler metadata.
 
-Each page also has a small inline script in `<head>` that applies the saved
-theme before first paint, so there is no flash of the wrong theme.
+The shared header/footer markup is inlined in each page (marked with
+`Shared header` / `Shared footer` comments) — keep the copies in sync when
+editing. Each page also sets a strict Content-Security-Policy via `<meta>`;
+update the `connect-src`/`media-src` directives there if new external sources
+are added.
 
 ## Music data
 
@@ -38,4 +44,4 @@ data URIs. Everything else on the site is fully static.
 
 Hosted on DigitalOcean App Platform as a static site: it pulls this repository
 on push and serves the files as-is. No build command or output directory needs
-to be configured.
+to be configured. `404.html` is served automatically for unmatched paths.

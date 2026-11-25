@@ -3,11 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'self' https://poppart.outsystemscloud.com; media-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
     <title>Alex - Life</title>
     <meta
       name="description"
       content="Personal reflections, music, and gaming notes for Alex."
     />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f2" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0b12" />
+    <link rel="canonical" href="https://www.poppart.cloud/life.html" />
     <meta property="og:title" content="Alex - Life" />
     <meta
       property="og:description"
@@ -15,6 +22,8 @@
     />
     <meta property="og:url" content="https://www.poppart.cloud/life.html" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://www.poppart.cloud/og-image.png" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,22 +31,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script>
-      // Set the theme before first paint to avoid flashing the wrong theme.
-      (function () {
-        var theme = null;
-        try {
-          theme = localStorage.getItem("theme");
-        } catch (e) {}
-        if (theme !== "dark" && theme !== "light") {
-          theme =
-            window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
-        }
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
+    <script src="theme.js"></script>
     <script src="main.js" defer></script>
   </head>
   <body>
@@ -48,7 +42,24 @@
       <div class="grain"></div>
     </div>
 
-    <div data-include="header"></div>
+    <!-- Shared header — duplicated across pages; keep in sync -->
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Primary">
+        <a class="brand" href="index.html">Poppart</a>
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="work.html">Work</a>
+            <a href="life.html">Life</a>
+            <a href="apps.html">My Apps</a>
+            <a href="contact.html">Contact</a>
+          </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+            <span>Theme</span>
+          </button>
+        </div>
+      </nav>
+    </header>
 
     <main id="main" class="page">
       <section class="page-intro">
@@ -279,6 +290,9 @@
 
     </main>
 
-    <div data-include="footer"></div>
+    <!-- Shared footer — duplicated across pages; keep in sync -->
+    <footer class="site-footer">
+      <p>Built by a human that works with AI.</p>
+    </footer>
   </body>
 </html>

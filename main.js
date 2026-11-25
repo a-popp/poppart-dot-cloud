@@ -74,28 +74,6 @@
 		});
 	};
 
-	/** Fetches each [data-include] snippet (header/footer) and swaps it into the page. */
-	const loadIncludes = async () => {
-		const placeholders = Array.from(document.querySelectorAll("[data-include]"));
-		await Promise.all(
-			placeholders.map(async (placeholder) => {
-				const name = placeholder.getAttribute("data-include");
-				if (!name) {
-					return;
-				}
-				try {
-					const response = await fetch(`${name}.html`, { cache: "no-cache" });
-					if (!response.ok) {
-						return;
-					}
-					placeholder.outerHTML = await response.text();
-				} catch {
-					// Includes are optional; leave the placeholder empty on failure.
-				}
-			})
-		);
-	};
-
 	/** Builds the mailto link on the contact page from data attributes. */
 	const initContactLink = () => {
 		const link = document.querySelector("[data-contact-link]");
@@ -113,17 +91,23 @@
 		}
 
 		const address = `${user}@${domain}`;
-		const query = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-			"Hi Alex,\r\n\r\n"
-		)}`;
+		const target = `mailto:${address}?subject=${encodeURIComponent(
+			subject
+		)}&body=${encodeURIComponent("Hi Alex,\r\n\r\n")}`;
 
-		link.href = `mailto:${address}?${query}`;
+		link.addEventListener("click", () => {
+			window.location.href = target;
+		});
 		if (emailTarget) {
 			emailTarget.textContent = address;
 		}
 	};
 
-	/** Wires the "Start here" listbox on the home page. */
+	/**
+	 * Wires the "Start here" dropdown on the home page: a button that opens a
+	 * menu of real links. Implemented in-page (not a native <select>) so the
+	 * popup renders in embedded webviews where native pickers may not appear.
+	 */
 	const initChooser = () => {
 		const chooser = document.querySelector("[data-chooser]");
 		if (!chooser) {
@@ -131,89 +115,66 @@
 		}
 		const trigger = chooser.querySelector("[data-chooser-trigger]");
 		const menu = chooser.querySelector("[data-chooser-menu]");
-		const value = chooser.querySelector("[data-chooser-value]");
-		const options = Array.from(chooser.querySelectorAll("[data-chooser-option]"));
-
-		const setSelection = (option) => {
-			options.forEach((item) => item.setAttribute("aria-selected", "false"));
-			option.setAttribute("aria-selected", "true");
-			if (value) {
-				value.textContent = option.textContent.trim();
-			}
-			const destination = option.getAttribute("data-value");
-			if (destination) {
-				window.location.href = destination;
-			}
-		};
+		if (!trigger || !menu) {
+			return;
+		}
+		const items = Array.from(menu.querySelectorAll("a"));
 
 		const openMenu = () => {
-			if (!menu || !trigger) {
-				return;
-			}
 			menu.classList.add("open");
 			trigger.setAttribute("aria-expanded", "true");
-			const selected = menu.querySelector("[aria-selected=\"true\"]") || options[0];
-			if (selected) {
-				selected.focus();
-			}
+			// The menu's visibility transitions in; it needs a frame to start,
+			// so the links are only focusable after two frames.
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					items[0]?.focus();
+				});
+			});
 		};
 
-		const closeMenu = () => {
-			if (!menu || !trigger) {
-				return;
-			}
+		const closeMenu = (restoreFocus = false) => {
 			menu.classList.remove("open");
 			trigger.setAttribute("aria-expanded", "false");
+			if (restoreFocus) {
+				trigger.focus();
+			}
 		};
 
-		const toggleMenu = () => {
-			if (!menu) {
-				return;
-			}
+		trigger.addEventListener("click", () => {
 			if (menu.classList.contains("open")) {
-				closeMenu();
+				closeMenu(true);
 			} else {
 				openMenu();
 			}
-		};
+		});
 
-		if (trigger) {
-			trigger.addEventListener("click", toggleMenu);
-			trigger.addEventListener("keydown", (event) => {
-				if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
-					event.preventDefault();
-					openMenu();
-				}
-			});
-		}
+		trigger.addEventListener("keydown", (event) => {
+			if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
+				openMenu();
+			} else if (event.key === "Escape") {
+				closeMenu(true);
+			}
+		});
 
-		options.forEach((option, index) => {
-			option.setAttribute("aria-selected", "false");
-			option.addEventListener("click", () => {
-				setSelection(option);
-				closeMenu();
-			});
-			option.addEventListener("keydown", (event) => {
-				if (event.key === "ArrowDown") {
-					event.preventDefault();
-					const next = options[index + 1] || options[0];
-					next.focus();
-				} else if (event.key === "ArrowUp") {
-					event.preventDefault();
-					const prev = options[index - 1] || options[options.length - 1];
-					prev.focus();
-				} else if (event.key === "Escape") {
-					event.preventDefault();
-					closeMenu();
-					if (trigger) {
-						trigger.focus();
-					}
-				} else if (event.key === "Enter" || event.key === " ") {
-					event.preventDefault();
-					setSelection(option);
-					closeMenu();
-				}
-			});
+		menu.addEventListener("keydown", (event) => {
+			const index = items.indexOf(document.activeElement);
+			if (event.key === "ArrowDown") {
+				event.preventDefault();
+				(items[index + 1] || items[0])?.focus();
+			} else if (event.key === "ArrowUp") {
+				event.preventDefault();
+				(items[index - 1] || items[items.length - 1])?.focus();
+			} else if (event.key === "Home") {
+				event.preventDefault();
+				items[0]?.focus();
+			} else if (event.key === "End") {
+				event.preventDefault();
+				items[items.length - 1]?.focus();
+			} else if (event.key === "Escape") {
+				event.preventDefault();
+				closeMenu(true);
+			}
 		});
 
 		document.addEventListener("click", (event) => {
@@ -252,19 +213,26 @@
 			});
 		});
 
-		// Arrow keys move focus between tabs and activate on focus (APG pattern).
+		// Arrow keys move focus between tabs and activate on focus (APG pattern);
+		// Home/End jump to the first/last tab.
 		tabs.addEventListener("keydown", (event) => {
-			if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
-				return;
-			}
 			const currentIndex = tabButtons.indexOf(document.activeElement);
 			if (currentIndex === -1) {
 				return;
 			}
+			let next;
+			if (event.key === "ArrowRight") {
+				next = tabButtons[(currentIndex + 1) % tabButtons.length];
+			} else if (event.key === "ArrowLeft") {
+				next = tabButtons[(currentIndex - 1 + tabButtons.length) % tabButtons.length];
+			} else if (event.key === "Home") {
+				next = tabButtons[0];
+			} else if (event.key === "End") {
+				next = tabButtons[tabButtons.length - 1];
+			} else {
+				return;
+			}
 			event.preventDefault();
-			const offset = event.key === "ArrowRight" ? 1 : -1;
-			const next =
-				tabButtons[(currentIndex + offset + tabButtons.length) % tabButtons.length];
 			next.focus();
 			const target = next.getAttribute("data-tab");
 			if (target) {
@@ -314,8 +282,6 @@
 		const sortButtons = Array.from(musicBrowser.querySelectorAll("[data-sort]"));
 		const state = {
 			tracks: [],
-			selected: null,
-			selectedId: null,
 			loading: false,
 			loadQueued: false,
 			audioRequest: 0,
@@ -333,7 +299,7 @@
 		};
 
 		const fetchJson = async (url) => {
-			const response = await fetch(url, { cache: "no-cache" });
+			const response = await fetch(url);
 			if (!response.ok) {
 				throw new Error(`Request failed: ${response.status}`);
 			}
@@ -370,7 +336,7 @@
 				const dir = active ? state.sortDir : "none";
 				button.setAttribute("data-sort-dir", dir);
 				if (indicator) {
-					indicator.textContent = active ? (state.sortDir === "asc" ? "^" : "v") : "";
+					indicator.textContent = active ? (state.sortDir === "asc" ? "▲" : "▼") : "";
 				}
 				header.setAttribute(
 					"aria-sort",
@@ -542,15 +508,20 @@
 				if (!fileContent) {
 					throw new Error("No audio data available");
 				}
-				detailAudio.src = fileContent.startsWith("data:")
+				const src = fileContent.startsWith("data:")
 					? fileContent
 					: `data:${fileType};base64,${fileContent}`;
+				if (!src.startsWith("data:audio/")) {
+					throw new Error("Unexpected audio content type");
+				}
+				detailAudio.src = src;
 				detailAudio.play()?.catch(() => {});
 				if (item && track) {
 					renderDetail({ ...track, ...item }, trackId, { preserveAudio: true });
 				}
 				setStatus("");
-			} catch {
+			} catch (error) {
+				console.warn("Failed to load track audio", error);
 				if (requestId === state.audioRequest) {
 					setStatus("Unable to load audio for this mix.");
 				}
@@ -559,8 +530,6 @@
 
 		const selectTrack = (track) => {
 			const trackId = getTrackId(track);
-			state.selected = track;
-			state.selectedId = trackId;
 			renderDetail(track, trackId);
 			loadAudio(trackId, track);
 		};
@@ -595,7 +564,8 @@
 				state.tracks = data?.TrackCollection || [];
 				state.totalRecords = getTotalRecords(data) || state.tracks.length;
 				renderTracks();
-			} catch {
+			} catch (error) {
+				console.warn("Failed to load mixes", error);
 				setStatus("Unable to load mixes right now.");
 			} finally {
 				state.loading = false;
@@ -618,7 +588,8 @@
 					option.textContent = type.Label || "Type";
 					typeSelect.appendChild(option);
 				});
-			} catch {
+			} catch (error) {
+				console.warn("Failed to load mix types", error);
 				setStatus("Unable to load mix types.");
 			}
 		};
@@ -707,9 +678,8 @@
 		await loadTracks();
 	};
 
-	/** Entry point: load includes, then wire up whatever widgets exist on the page. */
+	/** Entry point: wire up whatever widgets exist on the page. */
 	const init = async () => {
-		await loadIncludes();
 		setActiveNav();
 		initThemeToggle();
 		initContactLink();
