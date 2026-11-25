@@ -1,4 +1,4 @@
-# PopPart Cloud
+# Poppart Cloud
 
 Personal static site for https://www.poppart.cloud — plain HTML/CSS/JS with no
 build step and no dependencies.
